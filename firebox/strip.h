@@ -12,5 +12,7 @@ extern Adafruit_NeoPixel strip;
 void setupStrip();
 void clearStrip();
 void fillStrip(uint32_t color);
+void fillLeftStrip(uint32_t color);
+void fillRightStrip(uint32_t color);
 
 #endif
