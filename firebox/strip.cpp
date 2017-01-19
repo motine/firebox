@@ -48,3 +48,15 @@ void pulseMountain(unsigned long pulse_duration, unsigned long elapsed_ms) {
   }
   strip.show();
 }
+
+void successFade(unsigned long duration, unsigned long elapsed_ms) {
+  uint32_t color;
+  if (elapsed_ms > duration)
+    return;
+  double pos = elapsed_ms / (double)duration; // 0.0 .. 1.0
+  for (int i = 0; i < STRIP_LED_COUNT; i++) {
+    color = strip.Color(max(0, cos(pos * PI) * 255), sin(pos * PI) * 255, 0);
+    strip.setPixelColor(i, color);
+  }
+  strip.show();
+}

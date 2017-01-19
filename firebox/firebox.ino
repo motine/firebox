@@ -11,6 +11,7 @@
 
 #define ALARM_DURATION 5000 // ms
 #define ALARM_PHASE_DURATION 250 // ms, how fast does it change between red and blue
+#define EXTINGUISHED_DURATION 5000 // ms
 
 byte mode = MODE_IDLE;
 
@@ -26,7 +27,6 @@ void setIdle() {
   mode = MODE_IDLE;
   clearStrip();
   setHomeLED();
-  setBurning(); // TODO remove me
 }
 
 void modeIdle() {
@@ -42,6 +42,7 @@ void setAlarm() {
 }
 
 void modeAlarm() {
+  setExtingushed(); // TODO remove
   if (millisSince() > ALARM_DURATION) {
     setBurning();
   }
@@ -63,13 +64,39 @@ void setBurning() {
 
 void modeBurning() {
   pulseMountain(1000, millisSince());
+  if (isOnlyThisSwitchOn(fire_number)) {
+    setExtingushed();
+  }
 }
 
 void setExtingushed() {
-  mode = MODE_BURNING;
+  mode = MODE_EXTINGUISHED;
   clearFireLEDs();
+  saveTime();
 }
+
 void modeExtinguished() {
+  unsigned long ms = millisSince();
+  successFade(EXTINGUISHED_DURATION, ms);
+  if (ms > EXTINGUISHED_DURATION) {
+    setIdle();
+  }
+}
+
+void debug_switch_states() {
+  // test switch states
+  uint32_t off_color = strip.Color(0, 0, 0);
+  uint32_t on_color = strip.Color(255, 255, 0);
+  strip.clear();
+  for (int pin = 8; pin <= 11; pin++) {
+    int pin_state = digitalRead(pin);
+    if (pin_state == LOW) {
+      strip.setPixelColor(pin, off_color);
+    } else {
+      strip.setPixelColor(pin, on_color);
+    }
+    strip.show();
+  }  
 }
 
 void loop() {
@@ -79,21 +106,5 @@ void loop() {
     case MODE_BURNING: modeBurning(); break;
     case MODE_EXTINGUISHED: modeExtinguished(); break;
   }
-  // uint32_t no_color = strip.Color(0, 255, 0);
-  // uint32_t color = strip.Color(255, 0, 255);
-  // fillStrip(no_color);
-  // --- switch test
-  // for (int pin = 2; pin <= 6; pin++) {
-  //   int pin_state = digitalRead(pin);
-  //   if (pin_state) {
-  //     strip.setPixelColor(pin, no_color);
-  //   } else {
-  //     strip.setPixelColor(pin, color);
-  //   }
-  // }
-  // strip.show();
-  // --- LEDs
-  // for (int pin = 9; pin <= 13; pin++) {
-  //   digitalWrite(pin, HIGH);
-  // }
+  // debug_switch_states();
 }

@@ -5,6 +5,6 @@
 
 void setupSwitches();
 bool startPressed();
-bool isCorrectFire();
+bool isOnlyThisSwitchOn(byte switch_number);
 
 #endif
