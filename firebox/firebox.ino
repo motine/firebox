@@ -42,7 +42,6 @@ void setAlarm() {
 }
 
 void modeAlarm() {
-  setExtingushed(); // TODO remove
   if (millisSince() > ALARM_DURATION) {
     setBurning();
   }
