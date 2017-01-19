@@ -2,6 +2,10 @@
 
 A litte fire command center for my son.
 
+## Requirements
+
+Please install the [Adafruit NeoPixel](https://learn.adafruit.com/adafruit-neopixel-uberguide/arduino-library) and [Keypad](http://playground.arduino.cc/Code/Keypad) (by Mark Stanley) libraries via the Arduino.
+
 ## States & Transitions
 
 ```
