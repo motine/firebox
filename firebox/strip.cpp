@@ -35,3 +35,16 @@ void fillRightStrip(uint32_t color) {
   }
   strip.show();
 }
+
+void pulseMountain(unsigned long pulse_duration, unsigned long elapsed_ms) {
+  uint32_t color;
+  double pos_in_pulse = (elapsed_ms % pulse_duration) / (double)pulse_duration; // 0.0 .. 1.0
+  double intensity = sin(pos_in_pulse * PI); // 0.0 .. 1.0 .. 0.0
+  double mountainFactor; // factor per LED, so we have the inner ones brigther than the ones on the edge
+  for (int i = 0; i < STRIP_LED_COUNT; i++) {
+    mountainFactor = 0.1 + 0.9 * sin((i * PI) / (STRIP_LED_COUNT-1));
+    color = strip.Color(intensity * mountainFactor * 255, 0, 0);
+    strip.setPixelColor(i, color);
+  }
+  strip.show();
+}

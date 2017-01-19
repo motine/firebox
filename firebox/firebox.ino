@@ -15,23 +15,35 @@
 byte mode = MODE_IDLE;
 
 void setup() {
+  randomSeed(analogRead(0));
   setupLEDs();
   setupStrip();
   setupSwitches();
+  setIdle();
 }
 
-void mode_idle() {
+void setIdle() {
+  mode = MODE_IDLE;
   clearStrip();
   setHomeLED();
-  if (startPressed()) {
-    mode = MODE_ALARM;
-    saveTime();
-  }
+  setBurning(); // TODO remove me
 }
 
-void mode_alarm() {
+void modeIdle() {
+  if (startPressed()) {
+    setAlarm();
+  }
+  delay(100);
+}
+
+void setAlarm() {
+  mode = MODE_ALARM;
+  saveTime();
+}
+
+void modeAlarm() {
   if (millisSince() > ALARM_DURATION) {
-    mode = MODE_BURNING;
+    setBurning();
   }
   if (alternatingState(ALARM_PHASE_DURATION)) {
     fillLeftStrip(strip.Color(255, 0, 0));
@@ -40,19 +52,32 @@ void mode_alarm() {
   }
 }
 
-void mode_burning() {
-  clearStrip();
+byte fire_number;
+void setBurning() {
+  mode = MODE_BURNING;
+  saveTime();
+  fire_number = random(0, 3);;
+  clearFireLEDs();
+  setFireLED(fire_number);
 }
 
-void mode_extinguished() {
+void modeBurning() {
+  pulseMountain(1000, millisSince());
+}
+
+void setExtingushed() {
+  mode = MODE_BURNING;
+  clearFireLEDs();
+}
+void modeExtinguished() {
 }
 
 void loop() {
   switch (mode) {
-    case MODE_IDLE: mode_idle(); break;
-    case MODE_ALARM: mode_alarm(); break;
-    case MODE_BURNING: mode_burning(); break;
-    case MODE_EXTINGUISHED: mode_extinguished(); break;
+    case MODE_IDLE: modeIdle(); break;
+    case MODE_ALARM: modeAlarm(); break;
+    case MODE_BURNING: modeBurning(); break;
+    case MODE_EXTINGUISHED: modeExtinguished(); break;
   }
   // uint32_t no_color = strip.Color(0, 255, 0);
   // uint32_t color = strip.Color(255, 0, 255);

@@ -14,5 +14,6 @@ void clearStrip();
 void fillStrip(uint32_t color);
 void fillLeftStrip(uint32_t color);
 void fillRightStrip(uint32_t color);
+void pulseMountain(unsigned long pulse_duration, unsigned long elapsed_ms);
 
 #endif
