@@ -12,7 +12,7 @@
 
 #define ALARM_DURATION 5000 // ms
 #define ALARM_PHASE_DURATION 250 // ms, how fast does it change between red and blue
-#define EXTINGUISHED_DURATION 5000 // ms
+#define EXTINGUISHED_DURATION 4000 // ms
 
 byte mode = MODE_IDLE;
 
@@ -83,7 +83,7 @@ byte fire_number;
 void setBurning() {
   mode = MODE_BURNING;
   saveTime();
-  fire_number = random(0, 3);;
+  fire_number = random(0, 4);;
   clearFireLEDs();
   setFireLED(fire_number);
 }
